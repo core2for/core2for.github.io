@@ -84,7 +84,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2019/11/19/vue/vue/">Vue</a>
+      <a class="article-title" href="/2019/11/19/vue/vue/">Vue 基础</a>
     </h1>
   
 
@@ -224,11 +224,28 @@
 
 <p>注意：data 必须是一个函数</p>
 <h3 id="通过-Prop-向子组件传递数据"><a href="#通过-Prop-向子组件传递数据" class="headerlink" title="通过 Prop 向子组件传递数据"></a>通过 Prop 向子组件传递数据</h3><p>Prop 是你可以在组件上注册的一些自定义特性<br>可以拥有任意数量的 prop，任何值都可以传递给任何 prop</p>
-<h3 id="监听子组件事件"><a href="#监听子组件事件" class="headerlink" title="监听子组件事件"></a>监听子组件事件</h3>
+<h3 id="监听子组件事件"><a href="#监听子组件事件" class="headerlink" title="监听子组件事件"></a>监听子组件事件</h3><p>父级组件可以像处理 native DOM 事件一样通过 v-on 监听子组件实例的任意事件<br>子组件可以通过调用内建的 $emit 方法 并传入事件名称来触发一个事件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;blog-post</span><br><span class="line">  ...</span><br><span class="line">  v-on:enlarge-text=&quot;postFontSize += 0.1&quot;</span><br><span class="line">&gt;&lt;/blog-post&gt;</span><br><span class="line">&lt;button v-on:click=&quot;$emit(&apos;enlarge-text&apos;)&quot;&gt;</span><br><span class="line">  Enlarge text</span><br><span class="line">&lt;/button&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用事件抛出一个值"><a href="#使用事件抛出一个值" class="headerlink" title="使用事件抛出一个值"></a>使用事件抛出一个值</h3><p>组件内部使用事件抛出一个值给父组件，父组件在监听事件的时候可以使用 $event 访问到被抛出的值</p>
+<h3 id="在组件上使用-v-model"><a href="#在组件上使用-v-model" class="headerlink" title="在组件上使用 v-model"></a>在组件上使用 v-model</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&lt;input v-model=&quot;searchText&quot;&gt; </span><br><span class="line">等价于</span><br><span class="line">&lt;input</span><br><span class="line">  v-bind:value=&quot;searchText&quot;</span><br><span class="line">  v-on:input=&quot;searchText = $event.target.value&quot;</span><br><span class="line">&gt;</span><br><span class="line">在组件上等价于</span><br><span class="line">&lt;custom-input</span><br><span class="line">  v-bind:value=&quot;searchText&quot;</span><br><span class="line">  v-on:input=&quot;searchText = $event&quot;</span><br><span class="line">&gt;&lt;/custom-input&gt;</span><br><span class="line">组件内的 &lt;input&gt; 必须：</span><br><span class="line">将其 value 特性绑定到一个名叫 value 的 prop 上</span><br><span class="line">在其 input 事件被触发时，将新的值通过自定义的 input 事件抛出</span><br><span class="line">写成代码之后是这样的：</span><br><span class="line">Vue.component(&apos;custom-input&apos;, &#123;</span><br><span class="line">  props: [&apos;value&apos;],</span><br><span class="line">  template: `</span><br><span class="line">    &lt;input</span><br><span class="line">      v-bind:value=&quot;value&quot;</span><br><span class="line">      v-on:input=&quot;$emit(&apos;input&apos;, $event.target.value)&quot;</span><br><span class="line">    &gt;</span><br><span class="line">  `</span><br><span class="line">&#125;)</span><br><span class="line">使用</span><br><span class="line">&lt;custom-input v-model=&quot;searchText&quot;&gt;&lt;/custom-input&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="使用插槽分发内容"><a href="#使用插槽分发内容" class="headerlink" title="使用插槽分发内容"></a>使用插槽分发内容</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;alert-box&gt;</span><br><span class="line">  Something bad happened.</span><br><span class="line">&lt;/alert-box&gt;</span><br><span class="line">Vue.component(&apos;alert-box&apos;, &#123;</span><br><span class="line">  template: `</span><br><span class="line">    &lt;div class=&quot;demo-alert-box&quot;&gt;</span><br><span class="line">      &lt;strong&gt;Error!&lt;/strong&gt;</span><br><span class="line">      &lt;slot&gt;&lt;/slot&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">  `</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="动态组件"><a href="#动态组件" class="headerlink" title="动态组件"></a>动态组件</h3><ul>
+<li>component<br>通过 is 特性实现<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;component v-bind:is=&quot;currentTabComponent&quot;&gt;&lt;/component&gt;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h3 id="解析-DOM-模板"><a href="#解析-DOM-模板" class="headerlink" title="解析 DOM 模板"></a>解析 DOM 模板</h3><p>有些 HTML 元素，诸如 &lt;ul&gt;、&lt;ol&gt;、&lt;table&gt; 和 &lt;select&gt;，对于哪些元素可以出现在其内部是有严格限制的。而有些元素，诸如 &lt;li&gt;、&lt;tr&gt; 和 &lt;option&gt;，只能出现在其它某些特定的元素内部， 我们可以使用 is 特性</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;table&gt;</span><br><span class="line">  &lt;tr is=&quot;blog-post-row&quot;&gt;&lt;/tr&gt;</span><br><span class="line">&lt;/table&gt;</span><br></pre></td></tr></table></figure>
+
+<p>注意在以下来源是不存在这种限制的：<br>字符串 (例如：template: ‘…’)<br>单文件组件 (.vue)<br>&lt;script type=”text/x-template”&gt;  </p>
+
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/19/vue/vue/" data-id="ck3f53qpe00070sdks2wktd2w" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/19/vue/vue/" data-id="ck3fgqrkq0007x8dk5edk0wm5" class="article-share-link">Share</a>
       
       
     </footer>
@@ -247,6 +264,16 @@
   </div>
   <div class="article-inner">
     
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/19/java/java basic/">Java Basic</a>
+    </h1>
+  
+
+      </header>
     
     <div class="article-entry" itemprop="articleBody">
       
@@ -277,7 +304,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/19/java/java basic/" data-id="ck3f53qoo00040sdka16qgpkn" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/19/java/java basic/" data-id="ck3fgqri70005x8dk8jl2w4xx" class="article-share-link">Share</a>
       
       
     </footer>
@@ -317,7 +344,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/18/basic/HTTPS/" data-id="ck3f53qoi00030sdk8l73ybxa" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/18/basic/HTTPS/" data-id="ck3fgqrhz0004x8dkefp0eesh" class="article-share-link">Share</a>
       
       
     </footer>
@@ -336,6 +363,16 @@
   </div>
   <div class="article-inner">
     
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/16/basic/linux/linux command/">Linux Command</a>
+    </h1>
+  
+
+      </header>
     
     <div class="article-entry" itemprop="articleBody">
       
@@ -357,7 +394,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/16/basic/linux/linux command/" data-id="ck3f53qpz00080sdknut2b08p" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/16/basic/linux/linux command/" data-id="ck3fgqrl20008x8dkintk963g" class="article-share-link">Share</a>
       
       
     </footer>
@@ -376,6 +413,16 @@
   </div>
   <div class="article-inner">
     
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/16/basic/mysql/MySQL8.0 操作手册/">MySQL 操作</a>
+    </h1>
+  
+
+      </header>
     
     <div class="article-entry" itemprop="articleBody">
       
@@ -412,7 +459,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/11/16/basic/mysql/MySQL8.0 操作手册/" data-id="ck3f53qq400090sdkvy1urdc0" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/11/16/basic/mysql/MySQL8.0 操作手册/" data-id="ck3fgqrla0009x8dkm9dlvh1r" class="article-share-link">Share</a>
       
       
     </footer>
@@ -453,7 +500,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/09/06/redis/redis简介/" data-id="ck3f53qp000060sdkrhzdxdr5" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/09/06/redis/redis简介/" data-id="ck3fgqrk00006x8dk48har153" class="article-share-link">Share</a>
       
       
     </footer>
@@ -494,7 +541,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/09/02/basic/HTTP Header/" data-id="ck3f53qov00050sdk6d1mrryy" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/09/02/basic/HTTP Header/" data-id="ck3fgqrhs0003x8dkpenl2bvn" class="article-share-link">Share</a>
       
       
     </footer>
@@ -531,7 +578,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/09/02/hexo/" data-id="ck3f53qli00020sdkbid796qz" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/09/02/hexo/" data-id="ck3fgqr9n0000x8dkq3uarxdi" class="article-share-link">Share</a>
       
       
     </footer>
@@ -568,7 +615,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/07/14/test/" data-id="ck3f53ql800010sdk9iokuqrl" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/07/14/test/" data-id="ck3fgqret0002x8dkzyecofh5" class="article-share-link">Share</a>
       
       
     </footer>
@@ -617,7 +664,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/07/14/hello-world/" data-id="ck3f53qkg00000sdkaqm3q7mf" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/07/14/hello-world/" data-id="ck3fgqrec0001x8dkmu1xvdp7" class="article-share-link">Share</a>
       
       
     </footer>
@@ -658,11 +705,11 @@
       <ul>
         
           <li>
-            <a href="/2019/11/19/vue/vue/">Vue</a>
+            <a href="/2019/11/19/vue/vue/">Vue 基础</a>
           </li>
         
           <li>
-            <a href="/2019/11/19/java/java basic/">(no title)</a>
+            <a href="/2019/11/19/java/java basic/">Java Basic</a>
           </li>
         
           <li>
@@ -670,11 +717,11 @@
           </li>
         
           <li>
-            <a href="/2019/11/16/basic/linux/linux command/">(no title)</a>
+            <a href="/2019/11/16/basic/linux/linux command/">Linux Command</a>
           </li>
         
           <li>
-            <a href="/2019/11/16/basic/mysql/MySQL8.0 操作手册/">(no title)</a>
+            <a href="/2019/11/16/basic/mysql/MySQL8.0 操作手册/">MySQL 操作</a>
           </li>
         
       </ul>
